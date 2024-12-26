@@ -30,7 +30,7 @@ RUN npm install
 
 COPY check_db.sh /check_db.sh
 
-CMD ["/bin/sh", "-c", "/check_db.sh && php artisan migrate --force && php artisan db:seed --class=RegionsTableSeeder && php artisan db:seed --class=CitiesTableSeeder && php artisan db:seed --class=StreetsTableSeeder"]
+CMD ["/bin/sh", "-c", "/check_db.sh && php artisan migrate --force && php artisan db:seed"]
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 8000
