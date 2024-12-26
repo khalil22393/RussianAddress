@@ -1,0 +1,57 @@
+version: '3.9'
+services:
+    # خدمة Laravel
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel_app
+        ports:
+            - "8000:8000"
+        volumes:
+            - .:/var/www/html
+        networks:
+            - app_network
+        environment:
+            - APP_ENV=local
+            - APP_DEBUG=true
+            - DB_HOST=db
+            - DB_PORT=3306
+            - DB_DATABASE=geo_locations_in_russia
+            - DB_USERNAME=root
+            - DB_PASSWORD=root
+        depends_on:
+            - db
+
+    # قاعدة بيانات MySQL
+    db:
+        image: mysql:5.7
+        container_name: db
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: geo_locations_in_russia
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - db_data:/var/lib/mysql
+        networks:
+            - app_network
+
+    # خدمة NPM لتجميع Vue.js تلقائيًا (Laravel Mix)
+    npm:
+        image: node:18
+        container_name: npm_service
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+        command: ["npm", "run", "watch"]
+        networks:
+            - app_network
+
+networks:
+    app_network:
+        driver: bridge
+
+volumes:
+    db_data:
