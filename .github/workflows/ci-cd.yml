@@ -34,7 +34,7 @@ jobs:
       - name: conf db env
         run: |
           echo "DB_CONNECTION=mysql" >> .env
-          echo "DB_HOST=mysql" >> .env
+          echo "DB_HOST=host.docker.internal" >> .env
           echo "DB_PORT=3306" >> .env
           echo "DB_DATABASE=test_db" >> .env
           echo "DB_USERNAME=root" >> .env
