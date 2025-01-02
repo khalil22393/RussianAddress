@@ -14,6 +14,8 @@ jobs:
         with:
           php-version: '8.4'
           extensions: mbstring, intl
+      - name: setup env
+        run: echo "APP_KEY=base64:VvLjuukNwqzPw6mWnW4LBKpanXwgasote+f1qp9Gf2Y=" >> $GITHUB_ENV
       - name: install Depend
         run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress
       - name: Run Tests
