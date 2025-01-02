@@ -38,10 +38,11 @@ jobs:
           echo "DB_USERNAME=root" >> .env
           echo "DB_PASSWORD=root" >> .env
       - name: copy env file
-        run: cp .env.example .env    
+        run: cp .env.example .env 
+      - name: genertae key
+        run: echo "APP_KEY=base64:VvLjuukNwqzPw6mWnW4LBKpanXwgasote+f1qp9Gf2Y=" >> .env
       - name: conf env
         run: |
-          php artisan key:generate
           php artisan migrate --env=testing
   test:
     runs-on: ubuntu-latest
@@ -56,5 +57,7 @@ jobs:
           extensions: mbstring, intl
       - name: install Depend
         run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress
+      - name: genertae key
+        run: echo "APP_KEY=base64:VvLjuukNwqzPw6mWnW4LBKpanXwgasote+f1qp9Gf2Y=" >> .env
       - name: test
         run: php artisan test --env=testing
