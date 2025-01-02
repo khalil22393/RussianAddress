@@ -29,8 +29,6 @@ jobs:
           for i in $(seq 1 10); do
             nc -z mysql 3306 && break || sleep 5
           done
-      - name: copy env file
-        run: cp .env.example .env
       - name: conf db env
         run: |
           echo "DB_CONNECTION=mysql" >> .env
@@ -39,6 +37,8 @@ jobs:
           echo "DB_DATABASE=test_db" >> .env
           echo "DB_USERNAME=root" >> .env
           echo "DB_PASSWORD=root" >> .env
+      - name: copy env file
+        run: cp .env.example .env    
       - name: conf env
         run: |
           php artisan key:generate
