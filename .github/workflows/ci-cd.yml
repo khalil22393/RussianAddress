@@ -24,8 +24,13 @@ jobs:
           extensions: mbstring, intl
       - name: install Depend
         run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress
+      - name: wailt for mysql
+        run: |
+          for i in $(seq 1 10); do
+            nc -z mysql 3306 && break || sleep 5
+          done
       - name: copy env file
-        run: cp .env.example .env        
+        run: cp .env.example .env
       - name: conf db env
         run: |
           echo "DB_CONNECTION=mysql" >> .env
@@ -43,13 +48,13 @@ jobs:
     needs: build
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3 
+        uses: actions/checkout@v3
       - name: set up php
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
           extensions: mbstring, intl
       - name: install Depend
-        run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress    
+        run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress
       - name: test
         run: php artisan test --env=testing
