@@ -1,4 +1,4 @@
-name test ci/cd
+name: test ci/cd
 on:
   push:
     branches:
@@ -16,4 +16,4 @@ jobs:
       - name: install Depend
        run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress
       - name: Run Tests
-        runL php artisan test
+        run php artisan test
