@@ -11,7 +11,7 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
+          MYSQL_DATABASE: geo_locations_in_russia
         ports:
           - 3306:3306
     steps:
@@ -34,7 +34,7 @@ jobs:
           echo "DB_CONNECTION=mysql" >> .env
           echo "DB_HOST=db" >> .env
           echo "DB_PORT=3306" >> .env
-          echo "DB_DATABASE=test_db" >> .env
+          echo "DB_DATABASE=geo_locations_in_russia" >> .env
           echo "DB_USERNAME=root" >> .env
           echo "DB_PASSWORD=root" >> .env
       - name: copy env file
@@ -44,20 +44,5 @@ jobs:
       - name: conf env
         run: |
           php artisan migrate --env=testing
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-      - name: set up php
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          extensions: mbstring, intl
-      - name: install Depend
-        run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress
-      - name: genertae key
-        run: echo "APP_KEY=base64:VvLjuukNwqzPw6mWnW4LBKpanXwgasote+f1qp9Gf2Y=" >> .env
-      - name: test
+      - name: start testing
         run: php artisan test --env=testing
