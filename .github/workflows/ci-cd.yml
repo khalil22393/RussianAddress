@@ -24,16 +24,32 @@ jobs:
           extensions: mbstring, intl
       - name: install Depend
         run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress
-      - name: wait for mysql
-        run: while !mysql -h 127.0.0.1 -u root -proot -e "select 1";do sleep 1; done
-      - name: setup env
+      - name: copy env file
+        run: cp .env.example .env        
+      - name: conf db env
         run: |
-          cp .env.example .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=mysql" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=test_db" >> .env
+          echo "DB_USERNAME=root" >> .env
+          echo "DB_PASSWORD=root" >> .env
+      - name: conf env
+        run: |
           php artisan key:generate
           php artisan migrate --env=testing
   test:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3 
+      - name: set up php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl
+      - name: install Depend
+        run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress    
       - name: test
-        run: php artisan test
+        run: php artisan test --env=testing
