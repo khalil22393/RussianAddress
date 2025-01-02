@@ -31,5 +31,7 @@ jobs:
           cp .env.example .env
           php artisan key:generate
           php artisan migrate --env=testing
+      - name: wait for migrate
+        run: while !mysql -h 127.0.0.1 -u root -proot -e "select name from regions";do sleep 1; done   
       - name: Run Tests
         run: php artisan test
