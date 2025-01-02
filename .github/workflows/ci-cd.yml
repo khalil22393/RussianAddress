@@ -28,8 +28,8 @@ jobs:
         run: while !mysql -h 127.0.0.1 -u root -proot -e "select 1";do sleep 1; done
       - name: setup env
         run: |
-        cp .env.example .env
-        php artisan key:generate
-        php artisan migrate --env=testing
+          cp .env.example .env
+          php artisan key:generate
+          php artisan migrate --env=testing
       - name: Run Tests
         run: php artisan test
