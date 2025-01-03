@@ -42,7 +42,7 @@ jobs:
           echo "DB_USERNAME=root" >> .env
           echo "DB_PASSWORD=root" >> .env
       - name: copy env file
-        run: cp .env.example .env
+        run: cp .env.example .env 
       - name: genertae key
         run: echo "APP_KEY=base64:VvLjuukNwqzPw6mWnW4LBKpanXwgasote+f1qp9Gf2Y=" >> .env
       - name: conf env
@@ -52,7 +52,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '21'
-      - name: install npm depen
+      - name: install npm depen    
         run: npm install --dev
       - name: build npm
         run: npm run build
