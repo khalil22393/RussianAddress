@@ -17,6 +17,10 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: setup tnamte session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          detached: true
       - name: set up php
         uses: shivammathur/setup-php@v2
         with:
