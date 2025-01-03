@@ -53,7 +53,7 @@ jobs:
         with:
           node-version: '14'
       - name: install npm depen    
-        run: npm install
+        run: npm install --dev
       - name: build npm
         run: npm run build
       - name: start testing
