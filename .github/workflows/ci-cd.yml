@@ -48,5 +48,13 @@ jobs:
       - name: conf env
         run: |
           php artisan migrate --env=testing
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: install npm depen    
+        run: npm install
+      - name: build npm
+        run: npm run build
       - name: start testing
         run: php artisan test --env=testing
