@@ -4,19 +4,23 @@ on:
     branches:
       - main
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     services:
-      mysql:
+      db:
         image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
+          MYSQL_DATABASE: geo_locations_in_russia
         ports:
           - 3306:3306
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: setup tnamte session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          detached: true
       - name: set up php
         uses: shivammathur/setup-php@v2
         with:
@@ -24,12 +28,33 @@ jobs:
           extensions: mbstring, intl
       - name: install Depend
         run: composer install --prefer-dist --no-ansi --no-interaction --no-scripts --no-progress
-      - name: wait for mysql
-        run: while !mysql -h 127.0.0.1 -u root -proot -e "select 1";do sleep 1; done
-      - name: setup env
+      - name: wailt for mysql
         run: |
-          cp .env.example .env
-          php artisan key:generate
+          for i in $(seq 1 10); do
+            nc -z mysql 3306 && break || sleep 5
+          done
+      - name: conf db env
+        run: |
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=db" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=geo_locations_in_russia" >> .env
+          echo "DB_USERNAME=root" >> .env
+          echo "DB_PASSWORD=root" >> .env
+      - name: copy env file
+        run: cp .env.example .env
+      - name: genertae key
+        run: echo "APP_KEY=base64:VvLjuukNwqzPw6mWnW4LBKpanXwgasote+f1qp9Gf2Y=" >> .env
+      - name: conf env
+        run: |
           php artisan migrate --env=testing
-      - name: Run Tests
-        run: php artisan test
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '21'
+      - name: install npm depen
+        run: npm install --dev
+      - name: build npm
+        run: npm run build
+      - name: start testing
+        run: php artisan test --env=testing
